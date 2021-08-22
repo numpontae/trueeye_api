@@ -19,18 +19,17 @@ class ctRoute {
         return s.charAt(0).toUpperCase() + s.slice(1)
     }
 
-    async postPatientByHN(data: any) {
+    async postPatientByHN(data : any) {
 
-                await this.postPatientInfoBYHN(data)
-                await this.postEmergencyByHN(data)
-                await this.postParentByHN(data)
-                await this.postPatientAddressByHN(data)
-                await this.postPatientFamilyByHN(data)
-                await this.postPatientSocialByHN(data)
-                await this.updateScreeningDataGroupBYNationID(data)
+        await this.postPatientInfoBYHN(data)
+        await this.postEmergencyByHN(data)
+        await this.postParentByHN(data)
+        await this.postPatientAddressByHN(data)
+        await this.postPatientFamilyByHN(data)
+        await this.postPatientSocialByHN(data)
+        await this.updateScreeningDataGroupBYNationID(data)
 
-            
-        
+
     }
 
     async postPatientInfoBYHN(HN : any) {
@@ -43,7 +42,7 @@ class ctRoute {
                         if (err) {
                             reject(err);
                         } else {
-                            statement.setFetchSize(100, function (err: any) {
+                            statement.setFetchSize(100, function (err : any) {
                                 if (err) {
                                     reject(err);
                                 } else {
@@ -78,11 +77,11 @@ class ctRoute {
               FROM PA_PatMas
               LEFT JOIN PA_Person ON PA_PatMas.PAPMI_PAPER_DR = PA_Person.PAPER_RowId
               WHERE PAPMI_No IS NOT NULL AND PAPMI_No = '${HN}' `;
-                                    statement.executeQuery(query, function (err: any, resultset: any) {
+                                    statement.executeQuery(query, function (err : any, resultset : any) {
                                         if (err) {
                                             reject(err);
                                         } else {
-                                            resultset.toObjArray(function (err: any, results: any) {
+                                            resultset.toObjArray(function (err : any, results : any) {
                                                 resolve(results);
                                             });
                                         }
@@ -91,7 +90,7 @@ class ctRoute {
                             });
                         }
                     });
-                    repos.release(connObj, function (err: any) {
+                    repos.release(connObj, function (err : any) {
                         if (err) {
                             console.log(err);
                         }
@@ -103,7 +102,7 @@ class ctRoute {
         let query_1 = `REPLACE INTO Screening.Patient_Info SET ? `
 
         await result.map((d : any) => {
-            repos.query(query_1, d, function (err: any, results: any) {
+            repos.query(query_1, d, function (err : any, results : any) {
                 if (err) {
                     return console.error(err.message);
                 }
@@ -114,23 +113,23 @@ class ctRoute {
     }
     async updateScreeningDataGroupBYNationID(HN : any) {
         let repos = di.get("repos")
-        let identifier:any = null
+        let identifier: any = null
         let query = `SELECT HN FROM Screening.Patient_Financial WHERE HN = '${HN}' `
-        repos.query(query, function (err: any, results: any) {
+        repos.query(query, function (err : any, results : any) {
             if (err) {
                 return console.error(err.message);
             }
             if (results.length == 0) {
                 query = `SELECT NationalID, Passport FROM Screening.Patient_Info WHERE HN = '${HN}' `
-                repos.query(query, function (err2: any, results2: any) {
+                repos.query(query, function (err2 : any, results2 : any) {
                     if (err2) {
                         return console.error(err2.message);
                     }
                     if (results2.length > 0) {
-                      
+
                         identifier = results2.NationalID != null ? 'NationalID' : 'Passport'
                         query = `REPLACE INTO Screening.Patient_Financial (HN) VALUES ('${HN}') `
-                        repos.query(query, function (err: any, results: any) {
+                        repos.query(query, function (err : any, results : any) {
                             if (err) {
                                 return console.error(err.message);
                             }
@@ -159,20 +158,20 @@ class ctRoute {
         });
 
         query = `SELECT HN FROM Screening.Patient_History WHERE HN = '${HN}' `
-        repos.query(query, function (err: any, results: any) {
+        repos.query(query, function (err : any, results : any) {
             if (err) {
                 return console.error(err.message);
             }
             if (results.length == 0) {
                 query = `SELECT NationalID, Passport FROM Screening.Patient_Info WHERE HN = '${HN}' `
-                repos.query(query, function (err2: any, results2: any) {
+                repos.query(query, function (err2 : any, results2 : any) {
                     if (err2) {
                         return console.error(err2.message);
                     }
                     if (results2.length > 0) {
                         identifier = results2.NationalID != null ? 'NationalID' : 'Passport'
                         query = `REPLACE INTO Screening.Patient_History (HN) VALUES ('${HN}') `
-                        repos.query(query, function (err: any, results: any) {
+                        repos.query(query, function (err : any, results : any) {
                             if (err) {
                                 return console.error(err.message);
                             }
@@ -236,7 +235,7 @@ class ctRoute {
                         if (err) {
                             reject(err);
                         } else {
-                            statement.setFetchSize(100, function (err: any) {
+                            statement.setFetchSize(100, function (err : any) {
                                 if (err) {
                                     reject(err);
                                 } else {
@@ -293,11 +292,11 @@ class ctRoute {
                                         AND ((NOK.NOK_Name IS NOT NULL AND NOK.NOK_Name2 IS NOT NULL) OR 
                                         (NOK.NOK_PAPER_DR->PAPER_Name IS NOT NULL AND NOK.NOK_PAPER_DR->PAPER_Name2 IS NOT NULL))
                                         ORDER BY NOK_PAPMI_ParRef Desc  `;
-                                    statement.executeQuery(query, function (err: any, resultset: any) {
+                                    statement.executeQuery(query, function (err : any, resultset : any) {
                                         if (err) {
                                             reject(err);
                                         } else {
-                                            resultset.toObjArray(function (err: any, results: any) {
+                                            resultset.toObjArray(function (err : any, results : any) {
                                                 resolve(results);
                                             });
                                         }
@@ -306,7 +305,7 @@ class ctRoute {
                             });
                         }
                     });
-                    repos.release(connObj, function (err: any) {
+                    repos.release(connObj, function (err : any) {
                         if (err) {
                             console.log(err);
                         }
@@ -317,7 +316,7 @@ class ctRoute {
         repos = di.get("repos")
         let query_1 = `REPLACE INTO Screening.Patient_Emergency SET ? `
         await result.map(async (d : any) => {
-            repos.query(query_1, d, function (err: any, results: any) {
+            repos.query(query_1, d, function (err : any, results : any) {
                 if (err) {
                     return console.error(err.message);
                 } else {
@@ -325,7 +324,7 @@ class ctRoute {
           SET pe.Subdistrict = (SELECT ca1.ID FROM Registration.CT_CityArea_1 ca1 WHERE ca1.Desc_TH = 
           (SELECT ca.Desc_TH FROM Registration.CT_CityArea ca WHERE ca.ID = pe.Subdistrict limit 1) AND ca1.Zip_Code = pe.Postcode limit 1)
           WHERE pe.HN = '${HN}'`
-                    repos.query(query_2, function (err2: any, results2: any) {
+                    repos.query(query_2, function (err2 : any, results2 : any) {
                         if (err2) {
                             return console.error(err2.message);
                         }
@@ -349,7 +348,7 @@ class ctRoute {
                         if (err) {
                             reject(err);
                         } else {
-                            statement.setFetchSize(100, function (err: any) {
+                            statement.setFetchSize(100, function (err : any) {
                                 if (err) {
                                     reject(err);
                                 } else {
@@ -379,11 +378,11 @@ class ctRoute {
                     AND Nok.NOK_Name is not null AND Nok.NOK_Name2 is not null 
                     AND NOK_PAPMI_ParRef->PAPMI_RowId->PAPER_AgeYr <= 15
                     ORDER BY NOK_PAPMI_ParRef Desc `;
-                                    statement.executeQuery(query, function (err: any, resultset: any) {
+                                    statement.executeQuery(query, function (err : any, resultset : any) {
                                         if (err) {
                                             reject(err);
                                         } else {
-                                            resultset.toObjArray(function (err: any, results: any) {
+                                            resultset.toObjArray(function (err : any, results : any) {
                                                 resolve(results);
                                             });
                                         }
@@ -392,7 +391,7 @@ class ctRoute {
                             });
                         }
                     });
-                    repos.release(connObj, function (err: any) {
+                    repos.release(connObj, function (err : any) {
                         if (err) {
                             console.log(err);
                         }
@@ -403,7 +402,7 @@ class ctRoute {
         repos = di.get("repos")
         let query_1 = `REPLACE INTO Screening.Parent SET ? `
         result.map(async (d : any) => {
-            await repos.query(query_1, d, function (err: any, results: any) {
+            await repos.query(query_1, d, function (err : any, results : any) {
                 if (err) {
                     return console.error(err.message);
                 }
@@ -412,7 +411,7 @@ class ctRoute {
         SET pr.Subdistrict = (SELECT ca1.ID FROM Registration.CT_CityArea_1 ca1 WHERE ca1.Desc_TH = 
         (SELECT ca.Desc_TH FROM Registration.CT_CityArea ca WHERE ca.ID = pr.Subdistrict limit 1) AND ca1.Zip_Code = pr.Postcode limit 1)
         WHERE pr.HN = '${HN}' `
-            repos.query(query_2, function (err: any, results: any) {
+            repos.query(query_2, function (err : any, results : any) {
                 if (err) {
                     return console.error(err.message);
                 }
@@ -431,7 +430,7 @@ class ctRoute {
                         if (err) {
                             reject(err);
                         } else {
-                            statement.setFetchSize(100, function (err: any) {
+                            statement.setFetchSize(100, function (err : any) {
                                 if (err) {
                                     reject(err);
                                 } else {
@@ -462,11 +461,11 @@ class ctRoute {
                         INNER JOIN PA_Person ON PA_PatMas.PAPMI_PAPER_DR = PA_Person.PAPER_RowId
                         WHERE PAPMI_No = '${HN}'
                     `;
-                                    statement.executeQuery(query, function (err: any, resultset: any) {
+                                    statement.executeQuery(query, function (err : any, resultset : any) {
                                         if (err) {
                                             reject(err);
                                         } else {
-                                            resultset.toObjArray(function (err: any, results: any) {
+                                            resultset.toObjArray(function (err : any, results : any) {
                                                 resolve(results);
                                             });
                                         }
@@ -475,7 +474,7 @@ class ctRoute {
                             });
                         }
                     });
-                    repos.release(connObj, function (err: any) {
+                    repos.release(connObj, function (err : any) {
                         if (err) {
                             console.log(err);
                         }
@@ -485,7 +484,7 @@ class ctRoute {
         });
         repos = di.get("repos")
 
-        
+
         let query_del
 
         let query_1 = `INSERT INTO Screening.Patient_Address SET ? `
@@ -495,11 +494,11 @@ class ctRoute {
             }' AND Type = '${
                 d.Type
             }' `
-            repos.query(query_del, function (err: any, results: any) {
+            repos.query(query_del, function (err : any, results : any) {
                 if (err) {
                     return console.error(err.message);
                 }
-                repos.query(query_1, d, function (err: any, results: any) {
+                repos.query(query_1, d, function (err : any, results : any) {
                     if (err) {
                         return console.error(err.message);
                     }
@@ -507,7 +506,7 @@ class ctRoute {
             SET pa.Subdistrict = (SELECT ca1.ID FROM Registration.CT_CityArea_1 ca1 WHERE ca1.Desc_TH = 
             (SELECT ca.Desc_TH FROM Registration.CT_CityArea ca WHERE ca.ID = pa.Subdistrict limit 1) AND ca1.Zip_Code = pa.Postcode limit 1)
             WHERE pa.HN = '${HN}' `
-                    repos.query(query_2, function (err: any, results: any) {
+                    repos.query(query_2, function (err : any, results : any) {
                         if (err) {
                             return console.error(err.message);
                         }
@@ -520,13 +519,13 @@ class ctRoute {
 
         });
         let query = `SELECT * FROM Screening.Patient_Address WHERE HN = ${HN} AND Type = 1 `
-        repos.query(query, function (err: any, results: any) {
+        repos.query(query, function (err : any, results : any) {
             if (err) {
                 return console.error(err.message);
             }
             if (results.length == 0) {
                 query = `INSERT INTO Screening.Patient_Address (HN, Type) Values ('${HN}',1)  `
-                repos.query(query, function (err2: any, results2: any) {
+                repos.query(query, function (err2 : any, results2 : any) {
                     if (err2) {
                         return console.error(err2.message);
                     }
@@ -545,7 +544,7 @@ class ctRoute {
                         if (err) {
                             reject(err);
                         } else {
-                            statement.setFetchSize(100, function (err: any) {
+                            statement.setFetchSize(100, function (err : any) {
                                 if (err) {
                                     reject(err);
                                 } else {
@@ -554,11 +553,11 @@ class ctRoute {
                   FAM_Desc "Disease"
                   FROM PA_Family
                   WHERE FAM_PAPMI_ParRef->PAPMI_No = '${HN}' `;
-                                    statement.executeQuery(query, function (err: any, resultset: any) {
+                                    statement.executeQuery(query, function (err : any, resultset : any) {
                                         if (err) {
                                             reject(err);
                                         } else {
-                                            resultset.toObjArray(function (err: any, results: any) {
+                                            resultset.toObjArray(function (err : any, results : any) {
                                                 resolve(results);
                                             });
                                         }
@@ -567,7 +566,7 @@ class ctRoute {
                             });
                         }
                     });
-                    repos.release(connObj, function (err: any) {
+                    repos.release(connObj, function (err : any) {
                         if (err) {
                             console.log(err);
                         }
@@ -584,7 +583,7 @@ class ctRoute {
 
         result.map(async (d : any) => {
 
-            repos.query(query_1, d, function (err: any, results: any) {
+            repos.query(query_1, d, function (err : any, results : any) {
                 if (err) {
                     return console.error(err.message);
                 }
@@ -593,7 +592,7 @@ class ctRoute {
         WHERE fh.HN = '${HN}' AND  fh.Person = '${
                     d.Person
                 }' AND Disease NOT IN (SELECT ID FROM Registration.CT_Diseases) `
-                repos.query(query_2, function (err: any, results: any) {
+                repos.query(query_2, function (err : any, results : any) {
                     if (err) {
                         return console.error(err.message);
                     }
@@ -614,7 +613,7 @@ class ctRoute {
                         if (err) {
                             reject(err);
                         } else {
-                            statement.setFetchSize(100, function (err: any) {
+                            statement.setFetchSize(100, function (err : any) {
                                 if (err) {
                                     reject(err);
                                 } else {
@@ -670,12 +669,12 @@ class ctRoute {
                                     WHERE SCH_PAPMI_ParRef->PAPMI_No = '${HN}' 
                                     AND LOWER(REPLACE(SCH_Habits_DR->HAB_Desc,' ','')) = 'drugabuse'
                                     ORDER BY SCH_UpdateDate DESC, SCH_UpdateTime DESC `;
-                                    
-                                    statement.executeQuery(query, function (err: any, resultset: any) {
+
+                                    statement.executeQuery(query, function (err : any, resultset : any) {
                                         if (err) {
                                             reject(err);
                                         } else {
-                                            resultset.toObjArray(function (err: any, results: any) {
+                                            resultset.toObjArray(function (err : any, results : any) {
                                                 resolve(results);
                                             });
                                         }
@@ -684,7 +683,7 @@ class ctRoute {
                             });
                         }
                     });
-                    repos.release(connObj, function (err: any) {
+                    repos.release(connObj, function (err : any) {
                         if (err) {
                             console.log(err);
                         }
@@ -697,19 +696,14 @@ class ctRoute {
         await repos.query(query_del)
 
         let query_1 = `INSERT INTO Screening.Patient_Social SET ? `
-          result.map(async(d : any) => {
-            repos.query(query_1, d, function (err: any, results: any) {
+        result.map(async (d : any) => {
+            repos.query(query_1, d, function (err : any, results : any) {
                 if (err) {
                     return console.error(err.message);
                 }
             });
-            })
+        })
 
-            
-    
-          
-            
-        
 
     }
 
@@ -721,54 +715,58 @@ class ctRoute {
 
             repos = di.get('cache')
             console.log(listHN.length)
-          listHN.map(async(d : any) => {
-            let result: any = await new Promise((resolve, reject) => {
-                repos.reserve((err : any, connObj : any) => {
-                    if (connObj) {
-                        let conn = connObj.conn;
-                        conn.createStatement((err : any, statement : any) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                statement.setFetchSize(100, function (err: any) {
-                                    if (err) {
-                                        reject(err);
-                                    } else {
-                                        const query = `SELECT PAPMI_RowID1 "Patient_RowID", '${d.HN}' "HN", PAPER_AgeYr "Age", PAPER_Dob "DateOfBirth", PAPER_Sex_DR->CTSEX_Desc "Sex", 
+            listHN.map(async (d : any) => {
+                let result: any = await new Promise((resolve, reject) => {
+                    repos.reserve((err : any, connObj : any) => {
+                        if (connObj) {
+                            let conn = connObj.conn;
+                            conn.createStatement((err : any, statement : any) => {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    statement.setFetchSize(100, function (err : any) {
+                                        if (err) {
+                                            reject(err);
+                                        } else {
+                                            const query = `SELECT PAPMI_RowID1 "Patient_RowID", '${
+                                                d.HN
+                                            }' "HN", PAPER_AgeYr "Age", PAPER_Dob "DateOfBirth", PAPER_Sex_DR->CTSEX_Desc "Sex", 
                                         PAPER_Nation_DR->CTNAT_Desc "Nationality" 
                   FROM PA_PatMas
                   LEFT JOIN PA_Person ON PA_PatMas.PAPMI_PAPER_DR = PA_Person.PAPER_RowId
-                  WHERE PAPMI_No IS NOT NULL AND PAPMI_No = '${d.HN}' `;
-                  
-                                        statement.executeQuery(query, function (err: any, resultset: any) {
-                                            if (err) {
-                                                reject(err);
-                                            } else {
-                                                resultset.toObjArray(function (err: any, results: any) {
-                                                    resolve(results);
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                        repos.release(connObj, function (err: any) {
-                            if (err) {
-                                console.log(err);
-                            }
-                        });
-                    }
+                  WHERE PAPMI_No IS NOT NULL AND PAPMI_No = '${
+                                                d.HN
+                                            }' `;
+
+                                            statement.executeQuery(query, function (err : any, resultset : any) {
+                                                if (err) {
+                                                    reject(err);
+                                                } else {
+                                                    resultset.toObjArray(function (err : any, results : any) {
+                                                        resolve(results);
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                            repos.release(connObj, function (err : any) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
+                        }
+                    });
                 });
-            });
-            repos = di.get('repos')
-            result.map(async(d:any) => {
-                
-                query = `REPLACE INTO TrueEye.Patient_Info SET ?`
-                await repos.query(query, d)
+                repos = di.get('repos')
+                result.map(async (d : any) => {
+
+                    query = `REPLACE INTO TrueEye.Patient_Info SET ?`
+                    await repos.query(query, d)
+                })
             })
-            })
-            
+
 
         }
     }
@@ -776,25 +774,26 @@ class ctRoute {
     getPatientSocial() {
         return async (req : Request, res : Response) => {
             let repos = di.get('repos')
-            let query = `select Patient_RowID from TrueEye.Patient_Info pi2 Where Patient_RowID is not null LIMIT 19000, 1000`
+            let {numb} = req.query
+            let query = `select Patient_RowID from TrueEye.Patient_Info pi2 Where Patient_RowID is not null LIMIT ${numb}, 100`
             let listRowID = await repos.query(query)
 
             repos = di.get('cache')
             console.log(listRowID.length)
-            listRowID.map(async(d : any) => {
-            let result: any = await new Promise((resolve, reject) => {
-                repos.reserve((err : any, connObj : any) => {
-                    if (connObj) {
-                        let conn = connObj.conn;
-                        conn.createStatement((err : any, statement : any) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                statement.setFetchSize(100, function (err: any) {
-                                    if (err) {
-                                        reject(err);
-                                    } else {
-                                        const query = `SELECT SCH_RowId, 
+            listRowID.map(async (d : any) => {
+                let result: any = await new Promise((resolve, reject) => {
+                    repos.reserve((err : any, connObj : any) => {
+                        if (connObj) {
+                            let conn = connObj.conn;
+                            conn.createStatement((err : any, statement : any) => {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    statement.setFetchSize(100, function (err : any) {
+                                        if (err) {
+                                            reject(err);
+                                        } else {
+                                            const query = `SELECT SCH_RowId, 
                                         SCH_PAPMI_ParRef "Patient_RowID", 
                                         LOWER(REPLACE(SCH_Habits_DR->HAB_Desc,' ','')) "SCH_Habits",
                                         CASE WHEN SCH_HabitsQty_DR->QTY_desc = 'None' THEN 'No'
@@ -803,39 +802,41 @@ class ctRoute {
                                         SCH_UpdateDate, 
                                         SCH_UpdateTime
                                         FROM PA_SocHist 
-                                        WHERE SCH_PAPMI_ParRef = ${d.Patient_RowID} 
+                                        WHERE SCH_PAPMI_ParRef = ${
+                                                d.Patient_RowID
+                                            } 
                                         AND (LOWER(REPLACE(SCH_Habits_DR->HAB_Desc,' ','')) = 'alcohol' 
                                         OR LOWER(REPLACE(SCH_Habits_DR->HAB_Desc,' ','')) = 'smoking')`;
-                  
-                                        statement.executeQuery(query, function (err: any, resultset: any) {
-                                            if (err) {
-                                                reject(err);
-                                            } else {
-                                                resultset.toObjArray(function (err: any, results: any) {
-                                                    resolve(results);
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                        repos.release(connObj, function (err: any) {
-                            if (err) {
-                                console.log(err);
-                            }
-                        });
-                    }
+
+                                            statement.executeQuery(query, function (err : any, resultset : any) {
+                                                if (err) {
+                                                    reject(err);
+                                                } else {
+                                                    resultset.toObjArray(function (err : any, results : any) {
+                                                        resolve(results);
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                            repos.release(connObj, function (err : any) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
+                        }
+                    });
                 });
-            });
-            repos = di.get('repos')
-            await result.map(async(d:any) => {
-                query = `REPLACE INTO TrueEye.Patient_Social SET ?`
-                await repos.query(query, d)
-            })
+                repos = di.get('repos')
+                await result.map(async (d : any) => {
+                    query = `REPLACE INTO TrueEye.Patient_Social SET ?`
+                    await repos.query(query, d)
+                })
             })
             console.log('finish')
-            
+
 
         }
     }
@@ -843,16 +844,16 @@ class ctRoute {
     getPatientADM() {
         return async (req : Request, res : Response) => {
             let repos = di.get('repos')
-            
-            let query = `select Patient_RowID from TrueEye.Patient_Info pi2 Where Patient_RowID is not null limit 200`
+            let {numb} = req.query
+            let query = `select Patient_RowID from TrueEye.Patient_Info pi2 Where Patient_RowID is not null limit ${numb}, 100`
             let listRowID = await repos.query(query)
             repos = di.get('cache')
             let admdata: any = []
             let result: any = []
-            
-            
-                const data = listRowID.map(async(d : any) => {
-                    result = await new Promise((resolve, reject) => {
+
+
+            const data = listRowID.map(async (d : any) => {
+                result = await new Promise((resolve, reject) => {
                     repos.reserve((err : any, connObj : any) => {
                         if (connObj) {
                             let conn = connObj.conn;
@@ -860,20 +861,22 @@ class ctRoute {
                                 if (err) {
                                     reject(err);
                                 } else {
-                                    statement.setFetchSize(100, function (err: any) {
+                                    statement.setFetchSize(100, function (err : any) {
                                         if (err) {
                                             reject(err);
                                         } else {
                                             const query = `SELECT PAADM_RowID "ADM_RowId", PAADM_ADMNo "ADM_No", PAADM_PAPMI_DR "Patient_RowId",	
                                             PAADM_AdmDate "ADM_Date", PAADM_AdmTime "ADM_Time"
                                             FROM PA_Adm 
-                                            WHERE PAADM_PAPMI_DR = ${d.Patient_RowID} `;
-                      
-                                            statement.executeQuery(query, function (err: any, resultset: any) {
+                                            WHERE PAADM_PAPMI_DR = ${
+                                                d.Patient_RowID
+                                            } `;
+
+                                            statement.executeQuery(query, function (err : any, resultset : any) {
                                                 if (err) {
                                                     reject(err);
                                                 } else {
-                                                    resultset.toObjArray(function (err: any, results: any) {
+                                                    resultset.toObjArray(function (err : any, results : any) {
                                                         resolve(results)
                                                     });
                                                 }
@@ -882,7 +885,7 @@ class ctRoute {
                                     });
                                 }
                             });
-                            repos.release(connObj, function (err: any) {
+                            repos.release(connObj, function (err : any) {
                                 if (err) {
                                     console.log(err);
                                 }
@@ -890,15 +893,10 @@ class ctRoute {
                         }
                     });
                 })
-                
+
                 return result
-                });
-                
-                
+            });
 
-
-                
-                
 
             // await Promise.all(result)
             // console.log(result.length)
@@ -911,69 +909,63 @@ class ctRoute {
             //         ADM_Time : d.ADM_Time
             //     })
             // })
-            // })
+
             // console.log('finish')
             // res.send('test')
-            
-            
-    
+
+
             // console.log(result.length)
             // console.log(result[0])
             // result.then(function(results :any){
-                
+
             //     test = results; // Now you can use res everywhere
             //     console.log(test)
             // });
-    res.writeHead(200, {
-        'Content-Type': 'text/csv',
-        'Content-Disposition': 'attachment; filename=*custom_name*.csv'
-    });
-    var allObjects = [];
-// Pushing the headers, as the first arr in the 2-dimensional array 'allObjects' would be the first row
-allObjects.push(["ADM_RowId","Patient_RowId","ADM_No","ADM_Date","ADM_Time"]);
+            res.writeHead(200, {
+                'Content-Type': 'text/csv',
+                'Content-Disposition': `attachment; filename=*Vital${numb}*.csv`
+            });
+            var allObjects = [];
+            // Pushing the headers, as the first arr in the 2-dimensional array 'allObjects' would be the first row
+            allObjects.push([
+                "ADM_RowId",
+                "Patient_RowId",
+                "ADM_No",
+                "ADM_Date",
+                "ADM_Time"
+            ]);
 
-//Now iterating through the list and build up an array that contains the data of every object in the list, in the same order of the headers
-console.log(data.length)
-let bb = await Promise.all(data)
-                bb.map((d:any)=>
-                {
-                    d.map((a:any)=> {
-                        var arr = [];
-arr.push(a.ADM_RowId);
-arr.push(a.Patient_RowId);
-arr.push(a.ADM_No);
-arr.push(a.ADM_Date);
-arr.push(a.ADM_Time);
+            console.log(data.length)
+            let bb = await Promise.all(data)
+            bb.map((d : any) => {
+                d.map((a : any) => {
+                    var arr = [];
+                    arr.push(a.ADM_RowId);
+                    arr.push(a.Patient_RowId);
+                    arr.push(a.ADM_No);
+                    arr.push(a.ADM_Date);
+                    arr.push(a.ADM_Time);
 
-// Adding the array as additional element to the 2-dimensional array. It will evantually be converted to a single row
-allObjects.push(arr)
-                    })
+                    allObjects.push(arr)
                 })
-// await data.forEach(function(object: any){
-//     // console.log(11111)
+            })
 
-// });
-
-await Promise.all(allObjects)
-console.log(allObjects.length)
-// Initializing the output in a new variable 'csvContent'
-var csvContent = "";
-
-// The code below takes two-dimensional array and converts it to be strctured as CSV
-// *** It can be taken apart from the function, if all you need is to convert an array to CSV
-allObjects.forEach(function(infoArray : any, index: any){
-var dataString = infoArray.join(",");
-csvContent += index < allObjects.length ? dataString+ "\n" : dataString;
-}); 
-await Promise.all(csvContent)
-// Returning the CSV output
-// // await console.log(listRowID.length)
-// await console.log(numFruits.length)
-await res.end(csvContent,"binary");
-console.log('2222')
+            await Promise.all(allObjects)
+            console.log(allObjects.length)
+            var csvContent = "";
+            allObjects.forEach(function (infoArray : any, index : any) {
+                var dataString = infoArray.join(",");
+                csvContent += index < allObjects.length ? dataString + "\n" : dataString;
+            });
+            await Promise.all(csvContent)
+            // Returning the CSV output
+            // // await console.log(listRowID.length)
+            // await console.log(numFruits.length)
+            await res.end(csvContent, "binary");
+            console.log('2222')
         }
 
-        
+
     }
 
     getPatientLab() {
@@ -986,73 +978,83 @@ console.log('2222')
 
             repos = di.get('cache')
             console.log(listRowID.length)
-            listRowID.map(async(d : any) => {
-            let result: any = await new Promise((resolve, reject) => {
-                repos.reserve((err : any, connObj : any) => {
-                    if (connObj) {
-                        let conn = connObj.conn;
-                        conn.createStatement((err : any, statement : any) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                statement.setFetchSize(100, function (err: any) {
-                                    if (err) {
-                                        reject(err);
-                                    } else {
-                                        const query = `CALL Custom_THSV_Report_ZEN_StoredProc.SVNHRptEprLabResult_GetData('${d.HN}', '${d.ADM_No}')`;
-                  
-                                        statement.executeQuery(query, function (err: any, resultset: any) {
-                                            if (err) {
-                                                reject(err);
-                                            } else {
-                                                resultset.toObjArray(function (err: any, results: any) {
-                                                    resolve(results);
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                        repos.release(connObj, function (err: any) {
-                            if (err) {
-                                console.log(err);
-                            }
-                        });
-                    }
-                });
-            });
-            repos = di.get('repos')
-            await result.map(async(d:any) => {
-                if(d.DateOfAuth != null)
-                {
-                    d.DateOfAuth = d.DateOfAuth.toString().substring(6,10) + '-' + d.DateOfAuth.toString().substring(3,5) + '-' + d.DateOfAuth.toString().substring(0,2)
-                }
+            listRowID.map(async (d : any) => {
+                let result: any = await new Promise((resolve, reject) => {
+                    repos.reserve((err : any, connObj : any) => {
+                        if (connObj) {
+                            let conn = connObj.conn;
+                            conn.createStatement((err : any, statement : any) => {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    statement.setFetchSize(100, function (err : any) {
+                                        if (err) {
+                                            reject(err);
+                                        } else {
+                                            const query = `CALL Custom_THSV_Report_ZEN_StoredProc.SVNHRptEprLabResult_GetData('${
+                                                d.HN
+                                            }', '${
+                                                d.ADM_No
+                                            }')`;
 
-                if(d.DateOfRec != null)
-                {
-                    d.DateOfRec = d.DateOfRec.toString().substring(6,10) + '-' + d.DateOfRec.toString().substring(3,5) + '-' + d.DateOfRec.toString().substring(0,2)
-                }
-                
-                d.LabProcessDate = d.DateOfAuth
-                d.LabReceiptDate = d.DateOfRec
-                delete d.DateOfAuth
-                delete d.DateOfRec
-                delete d.title
-                delete d.Fname
-                delete d.Lname
-                let query_del = `DELETE FROM  TrueEye.Patient_Lab WHERE EpisodeNo = '${d.EpisodeNo}' 
-                AND tsCode = '${d.tsCode}' AND tcCode = '${d.tcCode}' `
-                await repos.query(query_del)
-                query = `INSERT INTO TrueEye.Patient_Lab SET ?`
-                await repos.query(query, d,function(err: any, res: any) {
-                    if (err) throw err;
-                    console.log(err);
-                  })
-            })
+                                            statement.executeQuery(query, function (err : any, resultset : any) {
+                                                if (err) {
+                                                    reject(err);
+                                                } else {
+                                                    resultset.toObjArray(function (err : any, results : any) {
+                                                        resolve(results);
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                            repos.release(connObj, function (err : any) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
+                        }
+                    });
+                });
+                repos = di.get('repos')
+                await result.map(async (d : any) => {
+                    if (d.DateOfAuth != null) {
+                        d.DateOfAuth = d.DateOfAuth.toString().substring(6, 10) + '-' + d.DateOfAuth.toString().substring(3, 5) + '-' + d.DateOfAuth.toString().substring(0, 2)
+                    }
+
+                    if (d.DateOfRec != null) {
+                        d.DateOfRec = d.DateOfRec.toString().substring(6, 10) + '-' + d.DateOfRec.toString().substring(3, 5) + '-' + d.DateOfRec.toString().substring(0, 2)
+                    }
+
+                    d.LabProcessDate = d.DateOfAuth
+                    d.LabReceiptDate = d.DateOfRec
+                    delete d.DateOfAuth
+                    delete d.DateOfRec
+                    delete d.title
+                    delete d.Fname
+                    delete d.Lname
+                    let query_del = `DELETE FROM  TrueEye.Patient_Lab WHERE EpisodeNo = '${
+                        d.EpisodeNo
+                    }' 
+                AND tsCode = '${
+                        d.tsCode
+                    }' AND tcCode = '${
+                        d.tcCode
+                    }' `
+                    await repos.query(query_del)
+                    query = `INSERT INTO TrueEye.Patient_Lab SET ?`
+                    await repos.query(query, d, function (err : any, res : any) {
+                        if (err) 
+                            throw err;
+                        
+                        console.log(err);
+                    })
+                })
             })
             console.log('finish')
-            
+
 
         }
     }
@@ -1060,65 +1062,126 @@ console.log('2222')
     getPatientVitalSign() {
         return async (req : Request, res : Response) => {
             let repos = di.get('repos')
+            let {numb} = req.query
             let query = `select HN, ADM_RowId from TrueEye.Patient_Adm
             INNER JOIN TrueEye.Patient_Info ON TrueEye.Patient_Adm.Patient_RowId = TrueEye.Patient_Info.Patient_RowId
-            WHERE ADM_No IS NOT NULL ORDER BY ADM_RowId Desc  LIMIT 1000 `
+             LIMIT ${numb}, 50000 `
             let listRowID = await repos.query(query)
-
+            var allObjects:any = [];
+            // Pushing the headers, as the first arr in the 2-dimensional array 'allObjects' would be the first row
+            allObjects.push([
+                "paadmid",
+                "weight",
+                "height",
+                "BPDiastolic",
+                "BPSystolic",
+                "Pulses",
+                "BPMeans",
+                "paadmidNo"
+            ]);
             repos = di.get('cache')
             console.log(listRowID.length)
-            listRowID.map(async(d : any) => {
-            let result: any = await new Promise((resolve, reject) => {
-                repos.reserve((err : any, connObj : any) => {
-                    if (connObj) {
-                        let conn = connObj.conn;
-                        conn.createStatement((err : any, statement : any) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                statement.setFetchSize(100, function (err: any) {
-                                    if (err) {
-                                        reject(err);
-                                    } else {
-                                        const query = `CALL Custom_THSV_Report_ZEN_StoredProc.SVNHrptEprObservation_GetData(${d.ADM_RowId})`;
-                  
-                                        statement.executeQuery(query, function (err: any, resultset: any) {
-                                            if (err) {
-                                                reject(err);
-                                            } else {
-                                                resultset.toObjArray(function (err: any, results: any) {
-                                                    resolve(results);
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                        repos.release(connObj, function (err: any) {
-                            if (err) {
-                                console.log(err);
-                            }
-                        });
-                    }
+            let b = await listRowID.map(async (d : any) => {
+                let result: any = await new Promise((resolve, reject) => {
+                    repos.reserve((err : any, connObj : any) => {
+                        if (connObj) {
+                            let conn = connObj.conn;
+                            conn.createStatement((err : any, statement : any) => {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    statement.setFetchSize(100, function (err : any) {
+                                        if (err) {
+                                            reject(err);
+                                        } else {
+                                            const query = `CALL Custom_THSV_Report_ZEN_StoredProc.SVNHrptEprObservation_GetData(${
+                                                d.ADM_RowId
+                                            })`;
+
+                                            statement.executeQuery(query, function (err : any, resultset : any) {
+                                                if (err) {
+                                                    reject(err);
+                                                } else {
+                                                    resultset.toObjArray(function (err : any, results : any) {
+                                                        resolve(results);
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                            repos.release(connObj, function (err : any) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
+                        }
+                    });
                 });
-            });
-            console.log(result)
-            if(result.length > 0 && !_.isEmpty(result[0].StatusArrival))
-            {
-                console.log('1')
-                repos = di.get('repos')
-                await result.map(async(d:any) => {
-                    
-                    console.log(d)
-                    query = `INSERT INTO TrueEye.Patient_VitalSign SET ?`
-                    await repos.query(query, d)
-                })
-            }
-            
+                await Promise.all(result)
+                let data
+                    repos = di.get('repos')
+                    data = await result.map(async (d : any) => {
+                        if (!_.isEmpty(d.StatusArrival) && !_.isEmpty(d.StatusArrival.trim()) &&
+                    ((!_.isEmpty(d.weight) && !_.isEmpty(d.weight.trim())) || (!_.isEmpty(d.BPDiastolic) && !_.isEmpty(d.BPDiastolic.trim())))) {
+                        var arr = [];
+                    arr.push(d.paadmid)
+                    arr.push(d.weight);
+                    arr.push(d.height);
+                    arr.push(d.BPDiastolic);
+                    arr.push(d.BPSystolic);
+                    arr.push(d.Pulses);
+                    arr.push(d.BPMeans);
+                    arr.push(d.paadmidNo);
+
+                    allObjects.push(arr)
+                    }
+                    })
+                
+                await Promise.all(data)
+                await Promise.all(allObjects)
+
             })
-            console.log('finish')
+
+            await Promise.all(b)
+
+            res.writeHead(200, {
+                'Content-Type': 'text/csv',
+                'Content-Disposition': `attachment; filename=*Vital${numb}*.csv`
+            });
             
+
+            // console.log(data.length)
+            // let bb = await Promise.all(data)
+            // bb.map((d : any) => {
+            //     d.map((a : any) => {
+            //         var arr = [];
+            //         arr.push(a.ADM_RowId);
+            //         arr.push(a.Patient_RowId);
+            //         arr.push(a.ADM_No);
+            //         arr.push(a.ADM_Date);
+            //         arr.push(a.ADM_Time);
+
+            //         allObjects.push(arr)
+            //     })
+            // })
+
+            await Promise.all(allObjects)
+            console.log(allObjects.length)
+            var csvContent = "";
+            allObjects.forEach(function (infoArray : any, index : any) {
+                var dataString = infoArray.join(",");
+                csvContent += index < allObjects.length ? dataString + "\n" : dataString;
+            });
+            await Promise.all(csvContent)
+            // Returning the CSV output
+            // // await console.log(listRowID.length)
+            // await console.log(numFruits.length)
+            await res.end(csvContent, "binary");
+
+            console.log('finish')
+
 
         }
     }
@@ -1133,20 +1196,20 @@ console.log('2222')
 
             repos = di.get('cache')
             console.log(listRowID.length)
-            listRowID.map(async(d : any) => {
-            let result: any = await new Promise((resolve, reject) => {
-                repos.reserve((err : any, connObj : any) => {
-                    if (connObj) {
-                        let conn = connObj.conn;
-                        conn.createStatement((err : any, statement : any) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                statement.setFetchSize(100, function (err: any) {
-                                    if (err) {
-                                        reject(err);
-                                    } else {
-                                        const query = `SELECT DISTINCT OEORI_ItmMast_DR, OEORI_ItmMast_DR->ARCIM_Code, OEORI_ItmMast_DR->ARCIM_Desc, OEORI_ItmMast_DR->ARCIM_Generic_DR, OEORI_ItmMast_DR->ARCIM_Generic_DR->PHCGE_Code,OEORI_ItmMast_DR->ARCIM_Generic_DR->PHCGE_Name, OEORD_RowId, OEORD_Adm_DR "PAADM_RowId", OEORD_Adm_DR->PAADM_ADMNo, PAADM_ADMDate                                                                                           
+            await listRowID.map(async (d : any) => {
+                let result: any = await new Promise((resolve, reject) => {
+                    repos.reserve((err : any, connObj : any) => {
+                        if (connObj) {
+                            let conn = connObj.conn;
+                            conn.createStatement((err : any, statement : any) => {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    statement.setFetchSize(100, function (err : any) {
+                                        if (err) {
+                                            reject(err);
+                                        } else {
+                                            const query = `SELECT DISTINCT OEORI_ItmMast_DR, OEORI_ItmMast_DR->ARCIM_Code, OEORI_ItmMast_DR->ARCIM_Desc, OEORI_ItmMast_DR->ARCIM_Generic_DR, OEORI_ItmMast_DR->ARCIM_Generic_DR->PHCGE_Code,OEORI_ItmMast_DR->ARCIM_Generic_DR->PHCGE_Name, OEORD_RowId, OEORD_Adm_DR "PAADM_RowId", OEORD_Adm_DR->PAADM_ADMNo, PAADM_ADMDate                                                                                           
                                         ,PHCD_PHCSC_DR->PHCSC_Code AS PharItemSubcateCode, PHCD_PHCSC_DR->PHCSC_Desc AS PharItemSubcateDesc
                                         ,PHCD_PHCSC_DR->PHCSC_PHCC_ParRef->PHC_SubCat->PHCSC_PHCC_ParRef->PHCC_Code AS PharItemCateCode, PHCD_PHCSC_DR->PHCSC_PHCC_ParRef->PHC_SubCat->PHCSC_PHCC_ParRef->PHCC_Desc AS PharItemCateDesc
                                         FROM OE_Order
@@ -1154,40 +1217,42 @@ console.log('2222')
                                     INNER JOIN OE_OrdItem ON OE_Order.OEORD_RowId1 = OE_OrdItem.OEORI_OEORD_ParRef
                                     INNER JOIN ARC_ItmMast ON ARC_ItmMast.ARCIM_RowId = OE_OrdItem.OEORI_ItmMast_DR
                                     INNER JOIN PHC_DrgMast ON ARC_ItmMast.ARCIM_Code = PHC_DrgMast.PHCD_Code
-                                    WHERE OEORD_Adm_DR = ${d.ADM_RowId}`;
-                  
-                                        statement.executeQuery(query, function (err: any, resultset: any) {
-                                            if (err) {
-                                                reject(err);
-                                            } else {
-                                                resultset.toObjArray(function (err: any, results: any) {
-                                                    resolve(results);
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                        repos.release(connObj, function (err: any) {
-                            if (err) {
-                                console.log(err);
-                            }
-                        });
-                    }
+                                    WHERE OEORD_Adm_DR = ${
+                                                d.ADM_RowId
+                                            }`;
+
+                                            statement.executeQuery(query, function (err : any, resultset : any) {
+                                                if (err) {
+                                                    reject(err);
+                                                } else {
+                                                    resultset.toObjArray(function (err : any, results : any) {
+                                                        resolve(results);
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                            repos.release(connObj, function (err : any) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
+                        }
+                    });
                 });
-            });
-            
-            repos = di.get('repos')
-            await result.map(async(d:any) => {
-                
-                
-                query = `INSERT INTO TrueEye.Patient_Medication SET ?`
-                await repos.query(query, d)
-            })
+
+                repos = di.get('repos')
+                await result.map(async (d : any) => {
+
+
+                    query = `INSERT INTO TrueEye.Patient_Medication SET ?`
+                    await repos.query(query, d)
+                })
             })
             console.log('finish')
-            
+
 
         }
     }
@@ -1202,54 +1267,56 @@ console.log('2222')
 
             repos = di.get('cache')
             console.log(listRowID.length)
-            listRowID.map(async(d : any) => {
-            let result: any = await new Promise((resolve, reject) => {
-                repos.reserve((err : any, connObj : any) => {
-                    if (connObj) {
-                        let conn = connObj.conn;
-                        conn.createStatement((err : any, statement : any) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                statement.setFetchSize(100, function (err: any) {
-                                    if (err) {
-                                        reject(err);
-                                    } else {
-                                        const query = `CALL Custom_THSV_Report_ZEN_StoredProc.SVNHRptEPRDiag_GetDiag(${d.ADM_RowId})`;
-                  
-                                        statement.executeQuery(query, function (err: any, resultset: any) {
-                                            if (err) {
-                                                reject(err);
-                                            } else {
-                                                resultset.toObjArray(function (err: any, results: any) {
-                                                    resolve(results);
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                        repos.release(connObj, function (err: any) {
-                            if (err) {
-                                console.log(err);
-                            }
-                        });
-                    }
+            listRowID.map(async (d : any) => {
+                let result: any = await new Promise((resolve, reject) => {
+                    repos.reserve((err : any, connObj : any) => {
+                        if (connObj) {
+                            let conn = connObj.conn;
+                            conn.createStatement((err : any, statement : any) => {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    statement.setFetchSize(100, function (err : any) {
+                                        if (err) {
+                                            reject(err);
+                                        } else {
+                                            const query = `CALL Custom_THSV_Report_ZEN_StoredProc.SVNHRptEPRDiag_GetDiag(${
+                                                d.ADM_RowId
+                                            })`;
+
+                                            statement.executeQuery(query, function (err : any, resultset : any) {
+                                                if (err) {
+                                                    reject(err);
+                                                } else {
+                                                    resultset.toObjArray(function (err : any, results : any) {
+                                                        resolve(results);
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                            repos.release(connObj, function (err : any) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
+                        }
+                    });
                 });
-            });
-            
-            repos = di.get('repos')
-            await result.map(async(data:any) => {
-                
-                data.ADM_RowId = d.ADM_RowId
-                console.log(data)
-                // query = `INSERT INTO TrueEye.Patient_ICD10 SET ?`
-                // await repos.query(query, data)
-            })
+
+                repos = di.get('repos')
+                await result.map(async (data : any) => {
+
+                    data.ADM_RowId = d.ADM_RowId
+                    console.log(data)
+                    // query = `INSERT INTO TrueEye.Patient_ICD10 SET ?`
+                    // await repos.query(query, data)
+                })
             })
             console.log('finish')
-            
+
 
         }
     }
@@ -1478,9 +1545,8 @@ console.log('2222')
             ).slice(-2) + "-" + date.getDate()
             let query = `SELECT * FROM consent_management.Patient_Data WHERE TC_RowIdHash = '${rowIdHash}' AND LinkExpireDate < ${linkexpiredate}`
             let result = await repos.query(query)
-            if(result.length > 0)
-            {
-            res.send(result[0])
+            if (result.length > 0) {
+                res.send(result[0])
             }
 
 
@@ -1842,12 +1908,6 @@ console.log('2222')
 const router = Router()
 const route = new ctRoute()
 
-router.get("/patientinfo", route.getPatientInfo())
-      .get("/patientsocial", route.getPatientSocial())
-      .get("/patientadm", route.getPatientADM())
-      .get("/patientlab", route.getPatientLab())
-      .get("/patientvitalsign", route.getPatientVitalSign())
-      .get("/patientmedication", route.getPatientMedication())
-      .get("/patienticd10", route.getPatientICD10())
+router.get("/patientinfo", route.getPatientInfo()).get("/patientsocial", route.getPatientSocial()).get("/patientadm", route.getPatientADM()).get("/patientlab", route.getPatientLab()).get("/patientvitalsign", route.getPatientVitalSign()).get("/patientmedication", route.getPatientMedication()).get("/patienticd10", route.getPatientICD10())
 
 export const patient = router
